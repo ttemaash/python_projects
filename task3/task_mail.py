@@ -3,9 +3,10 @@ import os
 from dotenv import load_dotenv
 
 load_dotenv()
+
 letter_template = '''\
-From: devmanorg@yandex.ru
-To: shl-tema@yandex.ru
+From: sender_post
+To: addressee_post
 Subject: Приглашение!
 Content-Type: text/plain; charset="UTF-8";
 
@@ -28,8 +29,10 @@ Content-Type: text/plain; charset="UTF-8";
 website_link = "https://dvmn.org/profession-ref-program/old2sk/abu5C/"
 friend_name = "Николай"
 sender_name = "Тёмка"
+sender_post = 'devmanorg@yandex.ru'
+addressee_post = 'shl-tema@yandex.ru'
 
-letter = letter_template.replace('%website%',website_link).replace('%friend_name%',friend_name).replace('%my_name%',sender_name)
+letter = letter_template.replace('%website%',website_link).replace('%friend_name%',friend_name).replace('%my_name%',sender_name).replace('sender_post',sender_post).replace('addressee_post',addressee_post)
 letter = letter.encode("UTF-8")
 
 server = smtplib.SMTP_SSL('smtp.yandex.ru', 465)
