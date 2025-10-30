@@ -3,7 +3,6 @@ from functools import partial
 from dotenv import load_dotenv
 from pytimeparse import parse
 import os
-import random
 
 
 def render_progressbar(total, iteration, prefix="", suffix="", length=30, fill="█", zfill="░"):
