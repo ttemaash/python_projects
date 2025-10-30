@@ -1,16 +1,9 @@
 import ptbot
+from functools import partial
 from dotenv import load_dotenv
 from pytimeparse import parse
 import os
 import random
-import sys
-
-
-load_dotenv()
-
-
-TG_TOKEN = os.environ["TG_API_TOKEN"]
-bot = ptbot.Bot(TG_TOKEN)
 
 
 def render_progressbar(total, iteration, prefix="", suffix="", length=30, fill="█", zfill="░"):
@@ -22,23 +15,26 @@ def render_progressbar(total, iteration, prefix="", suffix="", length=30, fill="
     return "{0} |{1}| {2}% {3}".format(prefix, pbar, percent, suffix)
 
 
-def reply(chat_id, text):
+def reply(bot, chat_id, text):
     user_time = parse(text)
-    bar = render_progressbar(user_time, 0, "Осталось {} секунд!\n".format(user_time))
-    message_id = bot.send_message(chat_id, bar)
-    bot.create_countdown(user_time, notify, chat_id=chat_id, message_id=message_id, user_time=user_time)
+    message_id = bot.send_message(chat_id, "Таймер запущен")
+    bot.create_countdown(user_time, partial(notify, bot), chat_id=chat_id, message_id=message_id, user_time=user_time)
 
 
-def notify(secs_left, chat_id, message_id, user_time):
+def notify(bot, secs_left, chat_id, message_id, user_time):
     actual_time = user_time - secs_left
-    bar = render_progressbar(user_time, actual_time, "Осталось {} секунд!\n".format(actual_time))
+    bar = render_progressbar(user_time, actual_time, "Осталось {} секунд!\n".format(secs_left))
     bot.update_message(chat_id, message_id, bar)
     if not secs_left:
         bot.send_message(chat_id, "Время вышло")
 
 
 def main():
-    bot.reply_on_message(reply)
+    load_dotenv()
+
+    TG_TOKEN = os.environ["TG_API_TOKEN"]
+    bot = ptbot.Bot(TG_TOKEN)
+    bot.reply_on_message(partial(reply, bot))
     bot.run_bot()
 
 
