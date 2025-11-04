@@ -4,6 +4,8 @@ from dotenv import load_dotenv
 from pytimeparse import parse
 import os
 
+
+load_dotenv()
 TG_TOKEN = os.environ["TG_API_TOKEN"]
 
 
@@ -31,8 +33,6 @@ def notify(bot, secs_left, chat_id, message_id, user_time):
 
 
 def main():
-    load_dotenv()
-
     bot = ptbot.Bot(TG_TOKEN)
     bot.reply_on_message(partial(reply, bot))
     bot.run_bot()
